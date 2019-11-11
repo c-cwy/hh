@@ -1,13 +1,12 @@
-const router = require('koa-router')()
+const { query } = require('../controller/index');
 
-router.prefix('/users')
-
-router.get('/', function (ctx, next) {
-  ctx.body = 'this is a users response!'
-})
-
-router.get('/bar', function (ctx, next) {
-  ctx.body = 'this is a users/bar response'
-})
-
-module.exports = router
+module.exports.add = async ctx => {
+    const { time, tit, author, read, state } = ctx.query
+    const addlist = 'insert into userlist (time, tit, author, read, state) values (?,?,?,?,?)'
+    let insertdata = await query(addlist, [time, tit, author, read, state])
+    console.log(insertdata)
+    ctx.body = {
+        code: 200,
+        data: insertdata
+    }
+}
