@@ -5,7 +5,7 @@ const Router = require('koa-router');
 const router = new Router();
 
 const bodyParser = require('koa-bodyparser')
-const { check, add, del, change } = require('./routes/users');
+const { check, del, add } = require('./routes/users');
 
 const path = require('path');
 const koaStatic = require('koa-static');
@@ -15,10 +15,9 @@ app.use(staticPath)
 app.use(bodyParser())
 app.use(router.routes()).use(router.allowedMethods());
 
-router.get('/userList/check', check)
-router.get('/userList/add', add)
-router.get('/userList/del', del)
-router.post('/userList/change', change)
+router.get('/list/check', check);
+router.get('/list/del', del);
+router.get('/list/add', add);
 
 app.listen(3001, function() {
     console.log('服务启动成功');

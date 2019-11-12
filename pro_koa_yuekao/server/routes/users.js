@@ -2,9 +2,9 @@ const { query } = require('../controller/index');
 
 //查询
 module.exports.check = async ctx => {
-    let checkList = 'select * from  userlist';
+    let checkList = 'select * from  list';
     let dataList = await query(checkList)
-    console.log(dataList);
+    console.log(ctx.query)
     if (dataList.length) {
         ctx.body = {
             code: 200,
@@ -12,43 +12,28 @@ module.exports.check = async ctx => {
         }
     } else {
         ctx.body = {
-            code: 200,
+            code: 404,
             msg: '没有数据'
         }
     }
 }
 
-//添加
-module.exports.add = async ctx => {
-    const { name, password } = ctx.query
-    const addlist = 'insert into userlist (name,password) values (?,?)'
-    let insertdata = await query(addlist, [name, password])
-    console.log(insertdata.length)
-    ctx.body = {
-        code: 200,
-        data: insertdata
-    }
-}
-
 //删除
 module.exports.del = async ctx => {
-    const { id } = ctx.query;
-    const dellist = 'delete from userlist where id=?'
-    const deldata = await query(dellist, [id]);
+    let { id } = ctx.query;
+    let sql = 'delete from list where id=?'
+    let data = await query(sql, [id]);
     ctx.body = {
-        code: 200,
-        data: deldata
+        code: 200
     }
 }
 
-//更改
-module.exports.change = async ctx => {
-    const { name, password, id } = ctx.request.body;
-    console.log(ctx.request.body);
-    const changelist = 'update userlist set name = ?,password=? where id = ?'
-    const changedata = await query(changelist, [name, password, id]);
+//添加
+module.exports.add = async ctx => {
+    let { tit, author } = ctx.query;
+    let sql = 'insert into list (tit,author) values (?,?)';
+    let data = await query(sql, [tit, author]);
     ctx.body = {
-        code: 200,
-        data: changedata
+        code: 200
     }
 }
