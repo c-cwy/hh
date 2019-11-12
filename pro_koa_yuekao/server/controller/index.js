@@ -16,9 +16,9 @@ module.exports.query = ((sql, parser = []) => {
     return new Promise((resolve, reject) => {
         connection.query(sql, parser, (error, data) => {
             if (error) {
-                reject(error);
+                reject({ msg: 'error', error });
             } else {
-                resolve(data)
+                resolve({ msg: 'success', data })
             }
         })
     })
