@@ -3,7 +3,6 @@ const { query } = require('../config/index');
 module.exports.check = async ctx => {
     let sql = 'select * from banner'
     let data = await query(sql)
-    console.log(data.length);
     if (data.msg === 'error') {
         ctx.body = {
             code: 400,
