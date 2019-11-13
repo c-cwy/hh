@@ -2,29 +2,27 @@
   <div id="app">
     <el-container>
       <el-header>
-        <el-button type="text" @click="dialogVisible = true">添加</el-button>
+        <el-button type="text" @click="handleAdd()">添加</el-button>
         <el-dialog title="提示" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
           <span>
-
-            <el-form
-              :model="numberValidateForm"
-              ref="numberValidateForm"
-              label-width="100px"
-              class="demo-ruleForm"
-            >
-              <el-form-item label="年龄" prop="age">
-                <el-input type="age" v-model.number="numberValidateForm.age" autocomplete="off"></el-input>
+            <el-form label-width="100px" class="demo-ruleForm">
+              <el-form-item label="序号" prop="idCard">
+                <el-input type="idCard" v-model.number="tableData.idCard" autocomplete="off"></el-input>
               </el-form-item>
-              <!-- <el-form-item>
-                <el-button type="primary" @click="submitForm('numberValidateForm')">提交</el-button>
-                <el-button @click="resetForm('numberValidateForm')">重置</el-button>
-              </el-form-item> -->
+              <el-form-item label="备注" prop="remark">
+                <el-input type="remark" v-model.number="tableData.remark" autocomplete="off"></el-input>
+              </el-form-item>
+              <el-form-item label="类型" prop="type">
+                <el-input type="type" v-model.number="tableData.type" autocomplete="off"></el-input>
+              </el-form-item>
+              <el-form-item label="创建时间" prop="timeD">
+                <el-input type="timeD" v-model.number="tableData.timeD" autocomplete="off"></el-input>
+              </el-form-item>
             </el-form>
-
           </span>
           <span slot="footer" class="dialog-footer">
             <el-button @click="dialogVisible = false">取 消</el-button>
-            <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+            <el-button type="primary" @click="handleSure()">确 定</el-button>
           </span>
         </el-dialog>
       </el-header>
@@ -33,7 +31,7 @@
           <el-table-column label="序号" prop="idCard"></el-table-column>
           <el-table-column label="备注" prop="remark"></el-table-column>
           <el-table-column label="类型" prop="type"></el-table-column>
-          <el-table-column label="创建时间" prop="time"></el-table-column>
+          <el-table-column label="创建时间" prop="timeD"></el-table-column>
           <el-table-column align="right">
             <template slot="header">操作</template>
             <template slot-scope="scope">
@@ -52,11 +50,16 @@ import axios from "axios";
 export default {
   data() {
     return {
-      tableData: [],
-      dialogVisible: false, //添加弹框
-      numberValidateForm: {
-          age: ''
+      tableData: [
+        {
+          idCard: "",
+          remark: "",
+          type: "",
+          timeD: ""
         }
+      ],
+      dialogVisible: false, //添加弹框
+      id: null
     };
   },
   created() {
@@ -65,17 +68,46 @@ export default {
   methods: {
     getList() {
       axios.get("/api/check").then(res => {
-        console.log(res.data.data);
         this.tableData = res.data.data;
       });
     },
-    handleEdit(index, row) {
-      console.log(index, row);
-    },
+    //删除
     handleDelete(index, row) {
       axios.get("/api/del", { params: { id: row.id } }).then(res => {
         this.getList();
       });
+    },
+    //修改
+    handleEdit(index, row) {
+      this.dialogVisible = true;
+      this.id = index;
+    },
+    handleAdd() {
+      this.dialogVisible = true;
+    },
+    //添加
+    handleSure() {
+      let idCard = this.tableData.idCard,
+        remark = this.tableData.remark,
+        type = this.tableData.type,
+        timeD = this.tableData.timeD;
+      let id = this.id;
+      // console.log(id)
+      //更改
+      if (this.id) {
+        console.log('========',this.id);
+        axios.post("/api/exit",{idCard, remark, type, timeD,id:this.id}).then(res=>{
+          console.log(res)
+          this.getList();
+          this.dialogVisible = false;
+        })
+      } else {
+        axios.post("/api/add", { idCard, remark, type, timeD }).then(res => {
+          this.getList();
+          this.dialogVisible = false;
+        });
+      }
+      console.log(this.id);
     },
     //弹框
     handleClose(done) {
@@ -84,8 +116,7 @@ export default {
           done();
         })
         .catch(_ => {});
-    },
-    //表单
+    }
   }
 };
 </script>
