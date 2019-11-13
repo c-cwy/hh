@@ -1,4 +1,4 @@
-# client
+# bannerclient
 
 ## Project setup
 ```

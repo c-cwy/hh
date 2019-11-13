@@ -82,7 +82,7 @@ module.exports.exit = async ctx => {
     let { idCard, remark, type, sort, time, id } = ctx.request.body;
     if (idCard && remark && type && sort && time) {
         try {
-            let sql = 'update list set idCard=?,remark=?,type=?,sort=?,time=? where id=?';
+            let sql = 'update banner set idCard=?,remark=?,type=?,sort=?,time=? where id=?';
             let data = await query(sql, [idCard, remark, type, sort, time, id]);
             ctx.body = {
                 code: 200,
