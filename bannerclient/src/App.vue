@@ -41,6 +41,18 @@
           </el-table-column>
         </el-table>
       </el-main>
+      <div class="block">
+        <span class="demonstration">完整功能</span>
+        <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="currentPage4"
+          :page-sizes="[100, 200, 300, 400]"
+          :page-size="100"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="400"
+        ></el-pagination>
+      </div>
     </el-container>
   </div>
 </template>
@@ -59,7 +71,11 @@ export default {
         }
       ],
       dialogVisible: false, //添加弹框
-      id: null
+      id: null,
+      currentPage1: 5,
+      currentPage2: 5,
+      currentPage3: 5,
+      currentPage4: 4
     };
   },
   created() {
@@ -79,8 +95,9 @@ export default {
     },
     //修改
     handleEdit(index, row) {
+      console.log(row);
       this.dialogVisible = true;
-      this.id = index;
+      this.id = row.id;
     },
     handleAdd() {
       this.dialogVisible = true;
@@ -91,23 +108,21 @@ export default {
         remark = this.tableData.remark,
         type = this.tableData.type,
         timeD = this.tableData.timeD;
-      let id = this.id;
-      // console.log(id)
+      // let id = this.id;
+      let url = "";
       //更改
       if (this.id) {
-        console.log('========',this.id);
-        axios.post("/api/exit",{idCard, remark, type, timeD,id:this.id}).then(res=>{
-          console.log(res)
-          this.getList();
-          this.dialogVisible = false;
-        })
+        url = "/api/exit";
       } else {
-        axios.post("/api/add", { idCard, remark, type, timeD }).then(res => {
+        url = "/api/add";
+      }
+      axios
+        .post(url, { idCard, remark, type, timeD, id: this.id })
+        .then(res => {
+          console.log(res);
           this.getList();
           this.dialogVisible = false;
         });
-      }
-      console.log(this.id);
     },
     //弹框
     handleClose(done) {
@@ -116,6 +131,13 @@ export default {
           done();
         })
         .catch(_ => {});
+    },
+    //分页
+    handleSizeChange(val) {
+      console.log(`每页 ${val} 条`);
+    },
+    handleCurrentChange(val) {
+      console.log(`当前页: ${val}`);
     }
   }
 };

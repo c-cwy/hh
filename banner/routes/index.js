@@ -1,7 +1,10 @@
 const { query } = require('../config/index');
 //全表查询
 module.exports.check = async ctx => {
-    let sql = 'select * from banner'
+    let { pagenum = 1, limit = 2 } = ctx.query;
+    let startIndex = (pagenum - 1) * limit;
+    // let totleData = await ctx.query('select count(*) from banner');
+    let sql = `select * from banner limit ${startIndex},${limit}`;
     let data = await query(sql)
     if (data.msg === 'error') {
         ctx.body = {
@@ -11,7 +14,8 @@ module.exports.check = async ctx => {
     } else {
         ctx.body = {
             code: 200,
-            data: data.data
+            data: data.data,
+            // totle: totleData[0]['count(*)']
         }
     }
 }
