@@ -2,7 +2,7 @@
 
 const Service = require('egg').Service;
 
-class IndexSwrvice extends Service {
+class IndexService extends Service {
     // 登录接口
     async login(username, password) {
         const result = await this.app.mysql.query("select * from userlist where username=? and password=?", [username, password]);
@@ -11,4 +11,4 @@ class IndexSwrvice extends Service {
 
 }
 
-module.exports = IndexSwrvice;
+module.exports = IndexService;

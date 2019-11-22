@@ -8,4 +8,5 @@ module.exports = app => {
     router.get('/', controller.home.index);
     router.post('/api/login', controller.user.login); //登录
     router.get('/api/power', controller.power.menu); //请求权限
+    router.post('/api/test', controller.home.test); //测试接口
 };

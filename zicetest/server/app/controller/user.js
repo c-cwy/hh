@@ -10,12 +10,13 @@ class UserController extends Controller {
         const { username, password } = this.ctx.request.body;
         if (username && password) {
             const result = await this.service.index.login(username, password);
-            if (result) {
-                let token = jwt.sign({ username, password, role_id: result.role_id }, "陈婉莹", { expiresIn: 60 * 60 });
+            console.log(result[0].rolename);
+            if (result.length) {
+                let token = jwt.sign({ username, password, role_id: result[0].role_id }, "陈婉莹", { expiresIn: 60 * 60 });
                 this.ctx.body = {
                     code: 1,
                     token,
-                    rolename: result.rolename,
+                    rolename: result[0].rolename,
                     msg: '登录成功!'
                 }
             } else {
